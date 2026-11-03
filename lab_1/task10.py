@@ -14,7 +14,9 @@ if(is_birthday):
     discount= discount + 0.05
 
 if(is_vip):
-    discount= max(discount, 0.15)
+    discount= max(discount, 0.1)
+if(discount>0.1):
+    discount = 0.1
 
 print(f'Ваша скидка: {discount * 100}%')
 print(f'Итого: {amount * (1-discount)}')
