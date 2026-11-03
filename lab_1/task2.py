@@ -1,4 +1,3 @@
-
 password = input('Введите пароль: ')
 def checkPassword(password : str):
     if len(password)<16:
@@ -7,6 +6,9 @@ def checkPassword(password : str):
     if password.isalnum():
         print('Пароль состоит только из букв и цифр')
         return
+    if password.islower() == password:
+        print('Пароль должен содержать разный регистр')
+
     print('Надежный пароль')
 
 checkPassword(password)
