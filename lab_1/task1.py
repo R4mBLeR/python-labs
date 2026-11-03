@@ -1,4 +1,7 @@
 name = input('Введите имя: ')
 last_name = input('Введите фамилию: ')
 surname = input('Введите отчество: ')
+name = name.lower()
+surname = surname.lower()
+last_name = last_name.lower()
 print(f"{last_name} {name[0]}. {surname[0]}.")
