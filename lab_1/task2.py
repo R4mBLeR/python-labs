@@ -8,7 +8,7 @@ def checkPassword(password : str):
         return
     if password.islower() == password:
         print('Пароль должен содержать разный регистр')
-
+        return
     print('Надежный пароль')
 
 checkPassword(password)
