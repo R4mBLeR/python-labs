@@ -7,8 +7,8 @@ print(f'Базовая сумма тарификации: {sum}')
 minutes = minutes - 60
 sms = sms - 30
 mbps = mbps - 1024
-minutes_price = (minutes > 0) * minutes * 0.89
-sms_price = (sms > 0) * sms * 0.59
+sms_price = sms * 0.59 if sms > 0 else 0
+minutes_price = minutes * 0.89 if minutes > 0 else 0
 mbps_price = (mbps > 0) * mbps * 0.79
 if minutes_price> 0:
     print(f'Сумма за дополнительно потраченные минут: {minutes_price}')
