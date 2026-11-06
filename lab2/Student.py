@@ -1,12 +1,10 @@
 class Student:
-    _next_id = 0
+    _next_id = 1
 
-    def __init__(self, name: str, last_name: str, course: int, age: int):
+    def __init__(self, name: str, last_name: str):
         self.name = name
         self.last_name = last_name
         self.speciality: str | None = None
-        self.course = course
-        self.age = age
         self.disciplines: list[str] = []
         self.grades: dict[str, int] = {}
         self.semester: int = 1
