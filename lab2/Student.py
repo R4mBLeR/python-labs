@@ -19,7 +19,8 @@ class Student:
         grade = 0
         for g in self.grades.values():
             grade += g
-        return grade / len(self.grades)
+        average = grade / len(self.grades) if len(self.grades) > 0 else None
+        return average
 
     def add_discipline(self, discipline: str) -> None:
         if discipline in self.disciplines:

@@ -37,12 +37,12 @@ class Faculty:
     def get_departments(self):
         return self.departments
 
-    def get_departments_and_disciplines(self) -> list:
-        result = []
+    def get_disciplines_and_deps(self) -> dict:
+        disciplines = {}
         for dep in self.departments:
             for name, specs in dep.disciplines.items():
-                result.append({dep, name})
-        return result
+                disciplines[name] = dep.name
+        return disciplines
 
 
     def add_department(self, departament: Department):
@@ -125,16 +125,27 @@ class Faculty:
         student: Student = self.students[student_id]
         if filename == None:
             filename = "Student_" + student.id
-        with open("demofile.txt", "a") as f:
+        with open(f"{filename}.txt", "w", encoding="utf8") as f:
+
+            f.write(f"Отчет о студенте\n")
             f.write(f"{student.name} {student.last_name}\n")
             f.write(f"Специальность: {student.speciality}\n")
-            f.write(f"Средний балл: {student.get_average_grade()}\n")
 
-            disciplines = self.get_departments_and_disciplines()
-            print(disciplines)
-
-
-
+            average_grade = student.get_average_grade()
+            dep_disc_grages = {}
+            disc_and_deps = self.get_disciplines_and_deps()
+            for dis in student.disciplines:
+                dep = disc_and_deps[dis]
+                dep_disc_grages.setdefault(dep, {})[dis] = student.grades.get(dis) 
+            if average_grade == None:
+                average_grade = "Отсутсвует"
+            f.write(f"Средний балл: {average_grade}\n")
+            f.write(f"Оценки по кафедрам:\n")
+            for dep, disc_grades in dep_disc_grages.items():
+                f.write(f"{dep}:\n")
+                for dis, grade in disc_grades.items():
+                    f.write(f"  {dis}: {grade}\n")
+                
 
 
 
