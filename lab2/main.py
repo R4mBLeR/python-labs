@@ -26,6 +26,7 @@ def init_fac():
     dep_cyber.add_discipline("Основы кибербезопасности", [cybersecurity, informatics])
     dep_cyber.add_discipline("Криптографические методы защиты информации", [informatics])
     dep_cyber.add_discipline("Программирование на JAVA", [cybersecurity, informatics])
+    dep_cyber.add_discipline("Программирование микроконтроллеров", [cybersecurity])
     faculty.add_department(dep_cyber)
 
     dep_saikm = Department("Кафедра системного анализа и ИКМ")
@@ -33,6 +34,29 @@ def init_fac():
                              [cybersecurity, informatics])
     dep_saikm.add_discipline("Интеллектуальный анализ данных", [informatics])
     faculty.add_department(dep_saikm)
+
+    ivan = Student("Иван", "Швецов")
+    faculty.add_student(ivan, cybersecurity)
+    id_ivan = ivan.id
+
+    mikhail = Student("Михаил", "Радикевич")
+    faculty.add_student(mikhail, informatics)
+    id_mikhail = mikhail.id
+
+    common = [
+        "Основы кибербезопасности",
+        "Программирование на JAVA",
+        "Теория вероятностей и математическая статистика",
+    ]
+    for sid in (id_ivan, id_mikhail):
+        for disc in common:
+            faculty.add_discipline_to_student(sid, disc)
+
+    faculty.add_discipline_to_student(id_ivan, "Программирование микроконтроллеров")
+    for disc in ("Криптографические методы защиты информации",
+                 "Интеллектуальный анализ данных"):
+        faculty.add_discipline_to_student(id_mikhail, disc)
+
     return faculty
 
 def main():

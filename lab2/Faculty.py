@@ -8,14 +8,17 @@ from Student import Student
 class Faculty:
 
     #Декораторы реально штука прикольная
-    def check_id(func):
+    def _check_student_id(func):
         @functools.wraps(func)
         def wrapper(self, *args, **kwargs):
-            student_id = kwargs.get("student_id")
+            if args:
+                student_id = args[0]
+            else:
+                student_id = kwargs.get("student_id")
             if student_id not in self.students:
                 raise KeyError("Неизвестный ID студента")
-            return func(*args, **kwargs)  
-        return wrapper   
+            return func(self, *args, **kwargs)
+        return wrapper
 
     def __init__(self, name):
         self.name = name
@@ -23,22 +26,57 @@ class Faculty:
         self.specialities = []
         self.departments: list[Department] = []
 
+    #Базовые методы
+
+    def get_specialities(self):
+        return self.specialities
+
+    def add_speciality(self, speciality: str):
+        self.specialities.append(speciality)
+
+    def get_departments(self):
+        return self.departments
+
+    def get_departments_and_disciplines(self) -> list:
+        result = []
+        for dep in self.departments:
+            for name, specs in dep.disciplines.items():
+                result.append({dep, name})
+        return result
+
+
+    def add_department(self, departament: Department):
+        self.departments.append(departament)
+
     def add_student(self, student: Student, speciality: str):
         if(speciality not in self.specialities):
             raise ValueError("Попытка зачислить на несуществующую специальность")
         student.speciality = speciality
         self.students[student.id] = student
 
-    @check_id
+    #Методы интерфейса
+
+    @_check_student_id
     def remove_student(self, id: int):
         self.students.pop(id)
-
-    @check_id
+        
+    @_check_student_id
     def add_discipline_to_student(self, student_id: int, discipline: str) -> None:
-            student: Student = self.students[student_id]
-            student.add_discipline(discipline)
+        student: Student = self.students[student_id]
 
-    @check_id
+        all_disciplines = self.get_disciplines_and_specs()
+
+        if discipline not in all_disciplines:
+            raise ValueError(f"Неизвестная дисциплина: {discipline!r}")
+
+        if student.speciality not in all_disciplines[discipline]:
+            raise ValueError(
+                f"Данная дисциплина не читается для специальности: {student.speciality}"
+            )
+
+        student.add_discipline(discipline)
+
+    @_check_student_id
     def remove_discipline_from_student(self, student_id: int, discipline: str) -> None:
         student: Student = self.students[student_id]
         if discipline not in student.disciplines:
@@ -52,7 +90,7 @@ class Faculty:
                 disciplines[name] = specs
         return disciplines
 
-    @check_id
+    @_check_student_id
     def set_grade(self, student_id: int, discipline: str, grade: int) -> None:
         student: Student = self.students[student_id]
 
@@ -67,7 +105,7 @@ class Faculty:
         student.set_grade(discipline, grade)
 
 
-    @check_id
+    @_check_student_id
     def transfer_to_next_semester(self, student_id: int) -> None:
         student: Student = self.students[student_id]
 
@@ -82,17 +120,25 @@ class Faculty:
 
         student.semester += 1
 
-    def get_specialities(self):
-        return self.specialities
+    @_check_student_id
+    def save_student_info_to_file(self, student_id: int, filename=None):
+        student: Student = self.students[student_id]
+        if filename == None:
+            filename = "Student_" + student.id
+        with open("demofile.txt", "a") as f:
+            f.write(f"{student.name} {student.last_name}\n")
+            f.write(f"Специальность: {student.speciality}\n")
+            f.write(f"Средний балл: {student.get_average_grade()}\n")
 
-    def add_speciality(self, speciality: str):
-        self.specialities.append(speciality)
+            disciplines = self.get_departments_and_disciplines()
+            print(disciplines)
 
-    def get_departments(self):
-        return self.departments
 
-    def add_department(self, departament: Department):
-        self.departments.append(departament)
+
+
+
+
+    
 
                 
 
