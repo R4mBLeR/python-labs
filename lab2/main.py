@@ -65,10 +65,39 @@ def main():
                 continue
 
             if choice == "3":
-                print("\Удаление студента:")
+                print("\nУдаление студента:")
                 id = int(input('Введите айди студента: ').strip())
                 faculty.remove_student(id)
                 continue
+
+            if choice == "4":
+                print("\nЗачислить студента на курс")
+                id = int(input('Введите айди студента: ').strip())
+                discipline = input('Введите название дисциплины: ').strip()
+                faculty.add_discipline_to_student(id, discipline)
+                continue
+
+            if choice == "5":
+                print("\nтписать студента от курса")
+                id = int(input('Введите айди студента: ').strip())
+                discipline = input('Введите название дисциплины: ').strip()
+                faculty.remove_discipline_from_student(id, discipline)
+                continue
+
+            if choice == "6":
+                print("\nВыставить оценку за курс")
+                id = int(input('Введите айди студента: ').strip())
+                discipline = input('Введите название дисциплины: ').strip()
+                grade = int(input('Введите оценку: ').strip())
+                faculty.set_grade(id, discipline, grade)
+                continue
+
+            if choice == "7":
+                print("\nПеревести на новый семестр")
+                id = int(input('Введите айди студента: ').strip())
+                faculty.transfer_to_next_semester(id)
+                continue
+            
         except (ValueError, KeyError) as e:
             print(f"Ошибка: {e}")
 

@@ -16,6 +16,16 @@ class Student:
         return self.course
 
     def add_discipline(self, discipline: str) -> None:
+        discipline = discipline.lower()
+        disciplines = self.get_disciplines_and_specs()
+        for dis in disciplines:
+            dis = dis.lower()
+        if discipline not in disciplines:
+            raise ValueError("Неизвестная дисциплина")
+        if self.speciality not in disciplines[discipline]:
+            raise ValueError(
+                    f"Данная дисциплина не читается для специальности: {self.speciality}"
+                )
         if discipline in self.disciplines:
             raise ValueError(f"Студент уже изучает дисциплину: {discipline}")
         self.disciplines.append(discipline)

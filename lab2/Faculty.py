@@ -1,9 +1,21 @@
 
+import functools
+
 from Department import Department
 from Student import Student
 
 
 class Faculty:
+
+    #Декораторы реально штука прикольная
+    def check_id(func):
+        @functools.wraps(func)
+        def wrapper(self, *args, **kwargs):
+            student_id = kwargs.get("student_id")
+            if student_id not in self.students:
+                raise KeyError("Неизвестный ID студента")
+            return func(*args, **kwargs)  
+        return wrapper   
 
     def __init__(self, name):
         self.name = name
@@ -17,23 +29,21 @@ class Faculty:
         student.speciality = speciality
         self.students[student.id] = student
 
+    @check_id
     def remove_student(self, id: int):
-        if id not in self.students:
-            raise KeyError("Неизвестный ID студента")
         self.students.pop(id)
 
+    @check_id
     def add_discipline_to_student(self, student_id: int, discipline: str) -> None:
-        if student_id not in self.students:
-            raise KeyError("Неизвестный ID студента")
+            student: Student = self.students[student_id]
+            student.add_discipline(discipline)
+
+    @check_id
+    def remove_discipline_from_student(self, student_id: int, discipline: str) -> None:
         student: Student = self.students[student_id]
-        disciplines = self.get_disciplines()
-        if discipline not in disciplines:
-            raise ValueError("Неизвестная дисциплина")
-        if student.speciality not in disciplines[discipline]:
-            raise ValueError(f"Данная дисциплина не читается для специальности:{student.speciality}")
-        if discipline in student.disciplines:
-            raise ValueError("Студент уже изучает данную дисциплину")
-        student.add_discipline(discipline)
+        if discipline not in student.disciplines:
+            raise ValueError("У студента нет такой дисциплины")
+        student.remove_discipline(discipline)
 
     def get_disciplines_and_specs(self):
         disciplines: dict[str, list[str]] = {}
@@ -42,9 +52,8 @@ class Faculty:
                 disciplines[name] = specs
         return disciplines
 
+    @check_id
     def set_grade(self, student_id: int, discipline: str, grade: int) -> None:
-        if student_id not in self.students:
-            raise KeyError("Неизвестный ID студента")
         student: Student = self.students[student_id]
 
         disciplines = self.get_disciplines_and_specs()
@@ -57,24 +66,9 @@ class Faculty:
 
         student.set_grade(discipline, grade)
 
-    def add_discipline_to_student(self, student_id: int, discipline: str) -> None:
-        if student_id not in self.students:
-            raise KeyError("Неизвестный ID студента")
-        student: Student = self.students[student_id]
 
-        disciplines = self.get_disciplines_and_specs()
-        if discipline not in disciplines:
-            raise ValueError("Неизвестная дисциплина")
-        if student.speciality not in disciplines[discipline]:
-            raise ValueError(
-                f"Данная дисциплина не читается для специальности: {student.speciality}"
-            )
-
-        student.add_discipline(discipline)
-
+    @check_id
     def transfer_to_next_semester(self, student_id: int) -> None:
-        if student_id not in self.students:
-            raise KeyError("Неизвестный ID студента")
         student: Student = self.students[student_id]
 
         if not student.disciplines:
@@ -99,3 +93,6 @@ class Faculty:
 
     def add_department(self, departament: Department):
         self.departments.append(departament)
+
+                
+
