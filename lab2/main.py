@@ -13,6 +13,7 @@ def print_menu():
     print("6. Выставить оценку")
     print("7. Перевести на следующий семестр")
     print("8. Запись сведений о студенте в файл")
+    print("9. Экспорт данных студентов в таблицу")
     print("0. Выход")
 
 def init_fac():
@@ -146,6 +147,12 @@ def main():
                 id = int(input('Введите айди студента: ').strip())
                 filename = input('Введите имя файла: ').strip()
                 faculty.save_student_info_to_file(id, filename)
+                continue
+
+            if choice == "9":
+                print("\nЭкспорт данных студентов в таблицу")
+                filename = input('Введите имя файла: ').strip()
+                faculty.save_students_info_to_csv(filename)
                 continue
             
         except (ValueError, KeyError) as e:

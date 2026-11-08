@@ -1,4 +1,5 @@
 
+import csv
 import functools
 
 from Department import Department
@@ -145,6 +146,20 @@ class Faculty:
                 f.write(f"{dep}:\n")
                 for dis, grade in disc_grades.items():
                     f.write(f"  {dis}: {grade}\n")
+
+    def save_students_info_to_csv(self, filename=None):
+        if filename == None:
+            filename = "output"
+        data = [
+            ["ID", "Имя", "Фамилия", "Специальность", "Средний балл"]
+        ]
+
+        for student in self.students.values():
+            data.append([student.id, student.name, student.last_name, student.speciality, student.get_average_grade()])
+
+        with open(f"{filename}.csv", "w", newline="", encoding="utf-8") as f:
+            writer = csv.writer(f)
+            writer.writerows(data)
                 
 
 
